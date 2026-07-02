@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from torch.nn import functional as F
+import torch.nn.functional as F
 import torch.optim as optim
 
 # config
@@ -80,14 +80,14 @@ class BigramModel(nn.Module):
 
 # evaluation
 @torch.no_grad()
-def estimate_loss(model, eval_iters=200):
+def estimate_loss(eval_iters=200):
     out = {}
     model.eval()
     for split in ['train', 'val']:
         losses = torch.zeros(eval_iters)
         for k in range(eval_iters):
             x, y = get_batch(split)
-            logits, loss = model(x, y)
+            _, loss = model(x, y)
             losses[k] = loss.item()
         out[split] = losses.mean()
     model.train()
@@ -100,7 +100,7 @@ epochs = 10000
 
 for epoch in range(epochs):
     if epoch % 1000 == 0:
-        stats = estimate_loss(model)
+        stats = estimate_loss()
         print(f"step {epoch}: train loss {stats['train']:.4f}, val loss {stats['val']:.4f}")
     
     x, y = get_batch('train')
