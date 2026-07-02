@@ -1,4 +1,4 @@
-data/
+data/input.txt
 __pycache__/
 *.pyc
 *.pth
